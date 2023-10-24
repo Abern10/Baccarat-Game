@@ -9,15 +9,15 @@ public class BaccaratDealer {
 
     ArrayList<Card> deck;
 
-    // This function creates the deck of cards. Since integers are required for the value, and some cards
-    //have strings as values (kings, queens, etc.) we will have 1 represent Aces, 11 for the Jacks, 12 for Queens
-    //and 13 for Kings. Once the deck is created, then it will be shuffled.
+    // This method creates the deck of cards. Since integers are required for the value, and some cards
+    // have strings as values (kings, queens, etc.) we will have 1 represent Aces, 11 for the Jacks, 12 for Queens
+    // and 13 for Kings. Once the deck is created, then it will be shuffled.
     public void generateDeck(){
 
-        //Clear the deck so that when this function is called, there aren't more than 52 cards.
+        // Clear the deck so that when this function is called, there aren't more than 52 cards.
         deck.clear();
 
-        //Add the cards into the deck
+        // Add the cards into the deck
         for (int i = 1; i <= 12; i++) {
             deck.add(new Card("heart", i));
             deck.add(new Card("diamond", i));
@@ -27,10 +27,12 @@ public class BaccaratDealer {
         shuffleDeck();
     }
 
-    // This function will return an ArrayList that has two cards in it, and then it will return that ArrayList
+    // This method will return an ArrayList that has two cards in it,
+    // and then it will return that ArrayList
     public ArrayList<Card> dealHand() {
         ArrayList<Card> hand = new ArrayList<>();
 
+        // checks to see if there are at least to cards in the deck
         if (deckSize() < 2) {
             return null;
         }
@@ -41,7 +43,7 @@ public class BaccaratDealer {
         }
     }
 
-    // Draws one card from the deck and returns i
+    // This method draws one card from the deck and returns it
     public Card drawOne(){
 
         if (deckSize() == 0){
@@ -53,12 +55,12 @@ public class BaccaratDealer {
 
     }
 
-    //This function shuffles the deck of cards by using the method shuffle() which does not return anything
+    // This method shuffles the deck of cards by using the method shuffle() which does not return anything
     public void shuffleDeck() {
         Collections.shuffle(this.deck);
     }
 
-    //This function returns the size of the deck
+    // This method returns the size of the deck
     public int deckSize() {
         return deck.size();
     }

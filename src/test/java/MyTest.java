@@ -16,10 +16,12 @@ class MyTest {
 		fail("Not yet implemented");
 	}
 
-	@Test
+//	@Test
 
-	void deckSizeTest() {
-
-	}
+//	void deckSizeTest() {
+//		BaccaratDealer dealer = new Baccarat
+//		generateDeck();
+//
+//	}
 
 }

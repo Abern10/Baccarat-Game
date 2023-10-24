@@ -25,10 +25,11 @@ public class BaccaratGame extends Application {
 	double currentBet;
 	double totalWinnings;
 
+	// This method will determine if the user won or lost their bet and return the amount won or
+	// lost based on the value in currentBet.
 	public double evalutateWinnings() {
 
 	}
-
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
