@@ -18,8 +18,8 @@ import java.util.ArrayList;
 public class BaccaratGame extends Application {
 
 	// Public data members
-	ArrayList<Card> playerHand = new ArrayList<>();
-	ArrayList<Card> bankerHand = new ArrayList<>();
+	ArrayList<Card> playerHand = new ArrayList<Card>();
+	ArrayList<Card> bankerHand = new ArrayList<Card>();
 	BaccaratDealer theDealer;
 	BaccaratGameLogic gameLogic;
 	double currentBet;
@@ -28,12 +28,15 @@ public class BaccaratGame extends Application {
 	// This method will determine if the user won or lost their bet and return the amount won or
 	// lost based on the value in currentBet.
 	public double evalutateWinnings() {
-
+		// TODO
+		return 0;
 	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		launch(args);
+
+
 
 
 	}
