@@ -10,12 +10,6 @@ import javafx.geometry.Insets;
 import java.util.ArrayList;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.image.Image;
 import java.util.*;
 public class BaccaratGame extends Application {
 
@@ -50,9 +44,6 @@ public class BaccaratGame extends Application {
 
 	// This method sets the scene to welcome the player and lets them start playing the game
 	private Scene setWelcomeScene(Stage primaryStage) {
-
-		Image backgroundImage = new Image("poker-background.png");
-
 		// Create a label for the title
 		Label title = new Label("Baccarat");
 		title.setTextFill(Color.RED);
@@ -69,9 +60,6 @@ public class BaccaratGame extends Application {
 		VBox titleBox = new VBox(title);
 		titleBox.setAlignment(Pos.TOP_CENTER);
 
-		// Add padding to titleBox to push the title to the top
-		VBox.setMargin(titleBox, new Insets(20, 0, 0, 0));
-
 		// Create a VBox for the button and set its alignment to the center
 		VBox buttonBox = new VBox(playButton);
 		buttonBox.setAlignment(Pos.CENTER);
@@ -80,23 +68,11 @@ public class BaccaratGame extends Application {
 		VBox mainLayout = new VBox(titleBox, buttonBox);
 		mainLayout.setAlignment(Pos.CENTER);
 
-		// Create a BackgroundImage with the loaded image
-		BackgroundImage background = new BackgroundImage(
-				backgroundImage,
-				BackgroundRepeat.NO_REPEAT, // You can adjust this if you want the image to repeat
-				BackgroundRepeat.NO_REPEAT, // You can adjust this if you want the image to repeat
-				BackgroundPosition.DEFAULT,
-				BackgroundSize.DEFAULT
-		);
-		// Set the background for the mainLayout
-		mainLayout.setBackground(new Background(background));
-
 		// Create the scene
 		Scene scene = new Scene(mainLayout, 700, 700);
 
 		return scene;
 	}
-
 
 
 	// This method sets the scene for a player to place their bets
