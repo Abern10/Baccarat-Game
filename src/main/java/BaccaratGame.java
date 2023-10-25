@@ -6,7 +6,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.geometry.Insets;
 import java.util.ArrayList;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -96,38 +95,33 @@ public class BaccaratGame extends Application {
 		// Create a label for "Select a bet amount"
 		Label selectBetLabel = new Label("Select a bet amount:");
 
+		// Create a Label for "Total Bet"
+		Label totalBetLabel = new Label("Total Bet: $0.0");
+		totalBetLabel.setTextFill(Color.BLACK); // Set text color to black
+
 		// Create circle buttons for "$1", "$5", "$10", "$25", and "$50"
-		Circle dollar1Button = new Circle(25, Color.GREEN);
-		dollar1Button.setStroke(Color.BLACK);
-		dollar1Button.setStrokeWidth(2);
-		Circle dollar5Button = new Circle(25, Color.BLUE);
-		dollar5Button.setStroke(Color.BLACK);
-		dollar5Button.setStrokeWidth(2);
-		Circle dollar10Button = new Circle(25, Color.YELLOW);
-		dollar10Button.setStroke(Color.BLACK);
-		dollar10Button.setStrokeWidth(2);
-		Circle dollar25Button = new Circle(25, Color.ORANGE);
-		dollar25Button.setStroke(Color.BLACK);
-		dollar25Button.setStrokeWidth(2);
-		Circle dollar50Button = new Circle(25, Color.RED);
-		dollar50Button.setStroke(Color.BLACK);
-		dollar50Button.setStrokeWidth(2);
+		Button dollar1Button = createCircleButton(25, Color.GREEN, "$1", 1.0, totalBetLabel);
+		Button dollar5Button = createCircleButton(25, Color.BLUE, "$5", 5.0, totalBetLabel);
+		Button dollar10Button = createCircleButton(25, Color.YELLOW, "$10", 10.0, totalBetLabel);
+		Button dollar25Button = createCircleButton(25, Color.ORANGE, "$25", 25.0, totalBetLabel);
+		Button dollar50Button = createCircleButton(25, Color.RED, "$50", 50.0, totalBetLabel);
 
 		// Create an HBox for the circle buttons
 		HBox circleButtonBox = new HBox(dollar1Button, dollar5Button, dollar10Button, dollar25Button, dollar50Button);
 		circleButtonBox.setAlignment(Pos.CENTER);
 		circleButtonBox.setSpacing(10);
 
-		// Create a label for "Total Bet"
-		Label totalBetLabel = new Label("Total Bet: ");
+		// Create button to clear bets and event handler
+		Button clearBetsButton = createRectangularButton("Clear Bets", 80, 30);
+		clearBetsButton.setOnAction(e -> {
+			clearBets(totalBetLabel);
+		});
 
-		// Create rectangular buttons for "Clear Bets" and "Draw"
-		Rectangle clearBetsButton = new Rectangle(80, 30, Color.LIGHTGRAY);
-		clearBetsButton.setStroke(Color.BLACK);
-		clearBetsButton.setStrokeWidth(2);
-		Rectangle drawButton2 = new Rectangle(80, 30, Color.LIGHTGRAY);
-		drawButton2.setStroke(Color.BLACK);
-		drawButton2.setStrokeWidth(2);
+		// Creat button to draw cards and event handler
+		Button drawButton2 = createRectangularButton("Draw", 80, 30);
+		drawButton2.setOnAction(e -> {
+			primaryStage.setScene(drawCardsScene(primaryStage));
+		});
 
 		// Create an HBox for the rectangular buttons
 		HBox rectangularButtonBox = new HBox(clearBetsButton, drawButton2);
@@ -153,5 +147,74 @@ public class BaccaratGame extends Application {
 		Scene scene = new Scene(root, 700, 700);
 		return scene;
 	}
+
+	// TODO: Complete this method for the next scene to display the cards
+	// This method sets the scene to display the cards that were drawn
+	private Scene drawCardsScene(Stage primaryStage) {
+		primaryStage.setTitle("Baccarat");
+
+
+		VBox root = new VBox(
+		);
+		root.setAlignment(Pos.CENTER);
+		root.setSpacing(20);
+
+		Scene scene = new Scene(root, 700, 700);
+		return scene;
+	}
+
+
+	// This method creates the buttons and setups up an event handler so when they are clicked they increment
+	// the totalBet
+	private Button createCircleButton(double radius, Color color, String labelText, double betAmount, Label totalBetLabel) {
+		Circle circle = new Circle(radius, color);
+		circle.setStroke(Color.BLACK);
+		circle.setStrokeWidth(2);
+
+		Label label = new Label(labelText);
+		label.setTextFill(Color.BLACK); // Set text color to black
+
+		StackPane stackPane = new StackPane(circle, label);
+		stackPane.setAlignment(Pos.CENTER);
+
+		Button button = new Button();
+		button.setGraphic(stackPane);
+		button.setStyle("-fx-background-color: transparent;"); // Make the button background transparent
+
+		// Add an event handler to increment the current bet when clicked
+		button.setOnAction(e -> {
+			currentBet += betAmount;
+			totalBetLabel.setText("Total Bet: $" + currentBet);
+		});
+
+		return button;
+	}
+
+	// This method creates the two buttons for clearing the bets and drawing cards
+	private Button createRectangularButton(String labelText, double width, double height) {
+		Rectangle button = new Rectangle(width, height, Color.LIGHTGRAY);
+		button.setStroke(Color.BLACK);
+		button.setStrokeWidth(2);
+
+		Label label = new Label(labelText);
+		label.setTextFill(Color.BLACK); // Set text color to black
+
+		StackPane stackPane = new StackPane(button, label);
+		stackPane.setAlignment(Pos.CENTER);
+
+		Button buttonControl = new Button();
+		buttonControl.setGraphic(stackPane);
+		buttonControl.setStyle("-fx-background-color: transparent;"); // Make the button background transparent
+
+		return buttonControl;
+	}
+
+	// This method will clear the bets the user inputted back to 0
+	private void clearBets(Label totalBetLabel) {
+		currentBet = 0.0;
+		totalBetLabel.setText("Total Bet: $0.0");
+	}
+
+
 
 }
