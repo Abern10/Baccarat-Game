@@ -10,6 +10,12 @@ import javafx.geometry.Insets;
 import java.util.ArrayList;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.image.Image;
 import java.util.*;
 public class BaccaratGame extends Application {
 
@@ -44,42 +50,54 @@ public class BaccaratGame extends Application {
 
 	// This method sets the scene to welcome the player and lets them start playing the game
 	private Scene setWelcomeScene(Stage primaryStage) {
+
+		Image backgroundImage = new Image("poker-background.png");
+
 		// Create a label for the title
 		Label title = new Label("Baccarat");
 		title.setTextFill(Color.RED);
-		title.setStyle("-fx-font-size: 36px;"); // Increase the font size
+		title.setStyle("-fx-font-size: 48px;"); // Increase the font size
 
 		// Create a button
 		Button playButton = new Button("Click to play!");
 		playButton.setOnAction(e -> {
-
 			// Transition to the bet scene when the button is clicked
 			primaryStage.setScene(setBetScene(primaryStage));
 		});
 
-		// Center the button text
-		playButton.setAlignment(Pos.CENTER);
+		// Create a VBox for the title and set its alignment to the top
+		VBox titleBox = new VBox(title);
+		titleBox.setAlignment(Pos.TOP_CENTER);
 
-		// Add padding between the title and the button
-		VBox.setMargin(playButton, new Insets(20, 0, 0, 0));
+		// Add padding to titleBox to push the title to the top
+		VBox.setMargin(titleBox, new Insets(20, 0, 0, 0));
 
-		// Create a GridPane to center the elements
-		GridPane grid = new GridPane();
-		grid.setAlignment(Pos.CENTER);
+		// Create a VBox for the button and set its alignment to the center
+		VBox buttonBox = new VBox(playButton);
+		buttonBox.setAlignment(Pos.CENTER);
 
-		// Add the title and button to the grid
-		grid.add(title, 0, 0);
-		grid.add(playButton, 0, 1);
+		// Create a VBox to contain both titleBox and buttonBox
+		VBox mainLayout = new VBox(titleBox, buttonBox);
+		mainLayout.setAlignment(Pos.CENTER);
 
-		// Create the main layout VBox
-		VBox root = new VBox(grid);
-		root.setAlignment(Pos.CENTER);
+		// Create a BackgroundImage with the loaded image
+		BackgroundImage background = new BackgroundImage(
+				backgroundImage,
+				BackgroundRepeat.NO_REPEAT, // You can adjust this if you want the image to repeat
+				BackgroundRepeat.NO_REPEAT, // You can adjust this if you want the image to repeat
+				BackgroundPosition.DEFAULT,
+				BackgroundSize.DEFAULT
+		);
+		// Set the background for the mainLayout
+		mainLayout.setBackground(new Background(background));
 
 		// Create the scene
-		Scene scene = new Scene(root, 700, 700);
+		Scene scene = new Scene(mainLayout, 700, 700);
 
 		return scene;
 	}
+
+
 
 	// This method sets the scene for a player to place their bets
 	private Scene setBetScene(Stage primaryStage) {
