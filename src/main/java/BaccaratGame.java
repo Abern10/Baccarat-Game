@@ -9,22 +9,28 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import java.util.*;
+
 public class BaccaratGame extends Application {
 
 	// Public member variables
-	private ArrayList<Card> playerHand;
-	private ArrayList<Card> bankerHand;
-	private BaccaratDealer theDealer;
-	private BaccaratGameLogic gameLogic;
-	private double currentBet;
-	private double totalWinnings;
+	public ArrayList<Card> playerHand;
+	public ArrayList<Card> bankerHand;
+	public BaccaratDealer theDealer;
+	public BaccaratGameLogic gameLogic;
+	public double currentBet;
+	public double totalWinnings;
+
+	// Public member variables that we added
+	public boolean setBetPlayer;
+	public boolean setBetBanker;
+	public boolean setBetDraw;
 
 	// TODO: FINISH THIS METHOD
-	// Public method
+	// This method will determine if the user won or lost their bet and return the amount won or
+	// lost based on the value in currentBet.
 	public double evaluateWinnings() {
-		double winnings = 0;
-		return winnings;
+		totalWinnings = 0;
+		return totalWinnings;
 	}
 
 	public static void main(String[] args) {
@@ -67,10 +73,7 @@ public class BaccaratGame extends Application {
 		VBox mainLayout = new VBox(titleBox, buttonBox);
 		mainLayout.setAlignment(Pos.CENTER);
 
-		// Create the scene
-		Scene scene = new Scene(mainLayout, 700, 700);
-
-		return scene;
+        return new Scene(mainLayout, 700, 700);
 	}
 
 
@@ -83,10 +86,17 @@ public class BaccaratGame extends Application {
 		title.setTextFill(Color.RED);
 		title.setStyle("-fx-font-size: 36px;"); // Increase the font size
 
-		// Create buttons for "PLAYER," "BANKER," and "DRAW"
+		// Create buttons for "PLAYER," "BANKER," and "DRAW" and all event handlers
 		Button playerButton = new Button("PLAYER");
+		playerButton.setOnAction(e -> setBetPlayer());
+
 		Button bankerButton = new Button("BANKER");
+		bankerButton.setOnAction(e -> setBetBanker());
+
+
 		Button drawButton = new Button("DRAW");
+		bankerButton.setOnAction(e->setBetDraw());
+
 
 		// Create a VBox to stack the buttons vertically
 		VBox buttonBox = new VBox(title, playerButton, bankerButton, drawButton);
@@ -100,11 +110,11 @@ public class BaccaratGame extends Application {
 		totalBetLabel.setTextFill(Color.BLACK); // Set text color to black
 
 		// Create circle buttons for "$1", "$5", "$10", "$25", and "$50"
-		Button dollar1Button = createCircleButton(25, Color.GREEN, "$1", 1.0, totalBetLabel);
-		Button dollar5Button = createCircleButton(25, Color.BLUE, "$5", 5.0, totalBetLabel);
-		Button dollar10Button = createCircleButton(25, Color.YELLOW, "$10", 10.0, totalBetLabel);
-		Button dollar25Button = createCircleButton(25, Color.ORANGE, "$25", 25.0, totalBetLabel);
-		Button dollar50Button = createCircleButton(25, Color.RED, "$50", 50.0, totalBetLabel);
+		Button dollar1Button = createCircleButton(Color.GREEN, "$1", 1.0, totalBetLabel);
+		Button dollar5Button = createCircleButton(Color.BLUE, "$5", 5.0, totalBetLabel);
+		Button dollar10Button = createCircleButton(Color.YELLOW, "$10", 10.0, totalBetLabel);
+		Button dollar25Button = createCircleButton(Color.ORANGE, "$25", 25.0, totalBetLabel);
+		Button dollar50Button = createCircleButton(Color.RED, "$50", 50.0, totalBetLabel);
 
 		// Create an HBox for the circle buttons
 		HBox circleButtonBox = new HBox(dollar1Button, dollar5Button, dollar10Button, dollar25Button, dollar50Button);
@@ -112,16 +122,12 @@ public class BaccaratGame extends Application {
 		circleButtonBox.setSpacing(10);
 
 		// Create button to clear bets and event handler
-		Button clearBetsButton = createRectangularButton("Clear Bets", 80, 30);
-		clearBetsButton.setOnAction(e -> {
-			clearBets(totalBetLabel);
-		});
+		Button clearBetsButton = createRectangularButton("Clear Bets");
+		clearBetsButton.setOnAction(e -> clearBets(totalBetLabel));
 
 		// Creat button to draw cards and event handler
-		Button drawButton2 = createRectangularButton("Draw", 80, 30);
-		drawButton2.setOnAction(e -> {
-			primaryStage.setScene(drawCardsScene(primaryStage));
-		});
+		Button drawButton2 = createRectangularButton("Draw Cards");
+		drawButton2.setOnAction(e -> primaryStage.setScene(drawCardsScene(primaryStage)));
 
 		// Create an HBox for the rectangular buttons
 		HBox rectangularButtonBox = new HBox(clearBetsButton, drawButton2);
@@ -143,9 +149,7 @@ public class BaccaratGame extends Application {
 		root.setAlignment(Pos.CENTER);
 		root.setSpacing(20);
 
-		// Create the scene
-		Scene scene = new Scene(root, 700, 700);
-		return scene;
+        return new Scene(root, 700, 700);
 	}
 
 	// TODO: Complete this method for the next scene to display the cards
@@ -153,21 +157,39 @@ public class BaccaratGame extends Application {
 	private Scene drawCardsScene(Stage primaryStage) {
 		primaryStage.setTitle("Baccarat");
 
+		// TODO: ERROR IN COMMENTED OUT CODE (WHEN UNCOMMENTED DRAW CARDS BUTTON
+		// DOES NOT WORK PRETTY SURE ITS THE FIRST LINE)
 
-		VBox root = new VBox(
-		);
+//		theDealer.generateDeck();
+//
+//		playerHand = theDealer.dealHand();
+//		bankerHand = theDealer.dealHand();
+//
+//		// Create Labels to display playerHand
+//		Label playerHandLabel = new Label("Player Hand:");
+//		for (Card card : playerHand) {
+//			playerHandLabel.setText(playerHandLabel.getText() + " " + card.suite + " " + card.value);
+//		}
+//
+//		// Create Labels to display bankerHand
+//		Label bankerHandLabel = new Label("Banker Hand:");
+//		for (Card card : bankerHand) {
+//			bankerHandLabel.setText(bankerHandLabel.getText() + " " + card.suite + " " + card.value);
+//		}
+
+		// Create a VBox to stack the Labels
+		VBox root = new VBox();
 		root.setAlignment(Pos.CENTER);
 		root.setSpacing(20);
 
-		Scene scene = new Scene(root, 700, 700);
-		return scene;
+		return new Scene(root, 700, 700);
 	}
 
 
 	// This method creates the buttons and setups up an event handler so when they are clicked they increment
 	// the totalBet
-	private Button createCircleButton(double radius, Color color, String labelText, double betAmount, Label totalBetLabel) {
-		Circle circle = new Circle(radius, color);
+	private Button createCircleButton(Color color, String labelText, double betAmount, Label totalBetLabel) {
+		Circle circle = new Circle(25, color);
 		circle.setStroke(Color.BLACK);
 		circle.setStrokeWidth(2);
 
@@ -191,8 +213,8 @@ public class BaccaratGame extends Application {
 	}
 
 	// This method creates the two buttons for clearing the bets and drawing cards
-	private Button createRectangularButton(String labelText, double width, double height) {
-		Rectangle button = new Rectangle(width, height, Color.LIGHTGRAY);
+	private Button createRectangularButton(String labelText) {
+		Rectangle button = new Rectangle(80, 30, Color.LIGHTGRAY);
 		button.setStroke(Color.BLACK);
 		button.setStrokeWidth(2);
 
@@ -213,6 +235,29 @@ public class BaccaratGame extends Application {
 	private void clearBets(Label totalBetLabel) {
 		currentBet = 0.0;
 		totalBetLabel.setText("Total Bet: $0.0");
+	}
+
+
+
+	// The three methods below will set the appropriate boolean variable to true
+	// and the others to false
+	private void setBetPlayer() {
+		setBetPlayer = true;
+		setBetBanker = false;
+		setBetDraw = false;
+	}
+
+	private void setBetBanker() {
+		setBetPlayer = false;
+		setBetBanker = true;
+		setBetDraw = false;
+	}
+
+
+	private void setBetDraw() {
+		setBetPlayer = false;
+		setBetBanker = false;
+		setBetDraw = true;
 	}
 
 
