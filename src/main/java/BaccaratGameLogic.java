@@ -63,6 +63,7 @@ public class BaccaratGameLogic extends BaccaratDealer {
             if (value < 10) {
                 handTotal += value;
             }
+
         }
         if (handTotal >= 10){
             return handTotal % 10;

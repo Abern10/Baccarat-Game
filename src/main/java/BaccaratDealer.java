@@ -7,7 +7,7 @@ import java.util.*;
 
 public class BaccaratDealer {
 
-    ArrayList<Card> deck;
+    ArrayList<Card> deck = new ArrayList<>();
 
     // This method creates the deck of cards. Since integers are required for the value, and some cards
     // have strings as values (kings, queens, etc.) we will have 1 represent Aces, 11 for the Jacks, 12 for Queens

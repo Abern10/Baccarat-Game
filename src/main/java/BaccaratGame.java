@@ -3,6 +3,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -95,7 +96,7 @@ public class BaccaratGame extends Application {
 
 
 		Button drawButton = new Button("DRAW");
-		bankerButton.setOnAction(e->setBetDraw());
+		drawButton.setOnAction(e -> setBetDraw());
 
 
 		// Create a VBox to stack the buttons vertically
@@ -127,7 +128,11 @@ public class BaccaratGame extends Application {
 
 		// Creat button to draw cards and event handler
 		Button drawButton2 = createRectangularButton("Draw Cards");
-		drawButton2.setOnAction(e -> primaryStage.setScene(drawCardsScene(primaryStage)));
+
+		drawButton2.setOnAction(e -> {
+			if (currentBet != 0 && (setBetBanker ^ setBetDraw ^ setBetPlayer))
+				primaryStage.setScene(drawCardsScene(primaryStage));
+		});
 
 		// Create an HBox for the rectangular buttons
 		HBox rectangularButtonBox = new HBox(clearBetsButton, drawButton2);
@@ -160,28 +165,56 @@ public class BaccaratGame extends Application {
 		// TODO: ERROR IN COMMENTED OUT CODE (WHEN UNCOMMENTED DRAW CARDS BUTTON
 		// DOES NOT WORK PRETTY SURE ITS THE FIRST LINE)
 
-//		theDealer.generateDeck();
+		theDealer = new BaccaratDealer();
+		theDealer.generateDeck();
 //
-//		playerHand = theDealer.dealHand();
-//		bankerHand = theDealer.dealHand();
-//
-//		// Create Labels to display playerHand
-//		Label playerHandLabel = new Label("Player Hand:");
+		playerHand = theDealer.dealHand();
+		bankerHand = theDealer.dealHand();
+
+		// Create Labels to display playerHand
+		Label playerHandLabel = new Label("Player Hand:");
+		Label playerField = new Label();
+		Label playerTotal = new Label();
+		playerField.setTextFill(Color.BLACK);
+		playerField.setText(playerHand.get(0).suite + " " + playerHand.get(0).value + "  |  " + playerHand.get(1).suite + " " + playerHand.get(1).value);
+		playerTotal.setTextFill(Color.RED);
+		playerTotal.setText(gameLogic.handTotal(playerHand) + "");
+
+
+		Label bankerHandLabel = new Label("Banker Hand:");
+		Label bankerField = new Label();
+		Label bankerTotal = new Label();
+		bankerField.setTextFill(Color.BLACK);
+		bankerField.setText(bankerHand.get(0).suite + " " + bankerHand.get(0).value + "  |  " + bankerHand.get(1).suite + " " + bankerHand.get(1).value);
+		bankerTotal.setTextFill(Color.RED);
+		// TODO: FIX THIS SO THAT YOU CAN SEE THE TOTAL OF BOTH HANDS
+		//bankerTotal.setText(handTotal(bankerHand) + "");
+
+
 //		for (Card card : playerHand) {
 //			playerHandLabel.setText(playerHandLabel.getText() + " " + card.suite + " " + card.value);
 //		}
 //
 //		// Create Labels to display bankerHand
-//		Label bankerHandLabel = new Label("Banker Hand:");
+
+//		TextField bankerField = new TextField();
+//		bankerField.setDisable(true);
 //		for (Card card : bankerHand) {
 //			bankerHandLabel.setText(bankerHandLabel.getText() + " " + card.suite + " " + card.value);
 //		}
 
 		// Create a VBox to stack the Labels
-		VBox root = new VBox();
-		root.setAlignment(Pos.CENTER);
-		root.setSpacing(20);
+		// Creates the label for the bankers hand
+		VBox banker = new VBox(bankerHandLabel, bankerField, bankerTotal);
+		banker.setAlignment(Pos.CENTER_RIGHT);
 
+		// Creates the label for the players hand
+		VBox player = new VBox(playerHandLabel,playerField, playerTotal);
+		player.setAlignment(Pos.CENTER_LEFT);
+
+		HBox root = new HBox(player, banker);
+		root.setSpacing(250);
+		root.setAlignment(Pos.CENTER);
 		return new Scene(root, 700, 700);
 	}
 
