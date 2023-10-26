@@ -17,7 +17,7 @@ public class BaccaratGame extends Application {
 	public ArrayList<Card> playerHand;
 	public ArrayList<Card> bankerHand;
 	public BaccaratDealer theDealer;
-	public BaccaratGameLogic gameLogic;
+	public BaccaratGameLogic gameLogic = new BaccaratGameLogic();
 	public double currentBet;
 	public double totalWinnings;
 
@@ -173,16 +173,17 @@ public class BaccaratGame extends Application {
 		Label playerField = new Label();
 		Label playerTotal = new Label();
 		playerField.setTextFill(Color.BLACK);
-		playerField.setText(playerHand.get(0).suite + " " + playerHand.get(0).value + "  |  " + playerHand.get(1).suite + " " + playerHand.get(1).value);
+		playerField.setText(playerHand.get(0).suite + " " + getString(playerHand.get(0).value) + "  |  " + playerHand.get(1).suite + " " + getString(playerHand.get(1).value));
 		playerTotal.setTextFill(Color.RED);
-		playerTotal.setText(gameLogic.handTotal(playerHand) + "");
+		playerTotal.setText(Integer.toString(gameLogic.handTotal(playerHand)));
+
 
 
 		Label bankerHandLabel = new Label("Banker Hand:");
 		Label bankerField = new Label();
 		Label bankerTotal = new Label();
 		bankerField.setTextFill(Color.BLACK);
-		bankerField.setText(bankerHand.get(0).suite + " " + bankerHand.get(0).value + "  |  " + bankerHand.get(1).suite + " " + bankerHand.get(1).value);
+		bankerField.setText(bankerHand.get(0).suite + " " + getString(bankerHand.get(0).value) + "  |  " + bankerHand.get(1).suite + " " + getString(bankerHand.get(1).value));
 		bankerTotal.setTextFill(Color.RED);
 		bankerTotal.setText(Integer.toString(gameLogic.handTotal(bankerHand)));
 
@@ -274,6 +275,21 @@ public class BaccaratGame extends Application {
 		setBetPlayer = false;
 		setBetBanker = false;
 		setBetDraw = true;
+	}
+
+	// This method returns the value of each card as a string
+	private String getString(int value) {
+		if (value == 1) {
+			return "Ace";
+		} else if (value == 11) {
+			return "Jack";
+		} else if (value == 12) {
+			return "Queen";
+		} else if (value == 13) {
+			return "King";
+		} else {
+			return Integer.toString(value);
+		}
 	}
 
 
