@@ -11,7 +11,21 @@ public class BaccaratGameLogic extends BaccaratDealer {
         // FIX THIS
         // TODO ASK HOW A NATURAL WIN WORKS, WHEN SHOULD WE CALL WHO WON (ONCE OR TWICE) ASK ABOUT DRAWS, IS AN 8 AND A 9 COUNT AS A DRAW, DO WE NEED TO SHOW PREVIOUS BETS
         // IF A PLAYER HAS AN 8 OR 9 ARLEADY DO THEY HAVE TO DRAW AND WHO GETS TO DECIDE.
+
+        // Make two helper functions to check if the player/banker has an 8 or 9 and then
+        // call who won depending on the result
+
         //If both cards are dealt and both banker and player have the same total, it will be counted as a draw
+
+        //Draw:
+        // A draw is true only if they have exactly the same total. 8 and 9 is not considered a draw
+
+        // Natural Win:
+        // If the player has 8 and the banker has 9, its the bankers win
+        // TA said that the whole game depends on who is closer to 9
+
+        // Showing results:
+        // SHow each roud result per game, it will clear if you press start from scratch
         if ((handTotal(playerHand) == 8 && handTotal(bankerHand) == 8) || (handTotal(playerHand) == 9 && handTotal(bankerHand) == 9)) {
             return draw;
         }
