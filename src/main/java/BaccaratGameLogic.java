@@ -78,7 +78,7 @@ public class BaccaratGameLogic extends BaccaratDealer {
     // card is not 8, the banker will collect a card. If the handtotal is 4, and the card is equal to
     // null(-1), 2, 3, 4,5, 6, or 7, they will collect. If the hand total is 5, and the player car is null(-1),
     // 4,5, 6, or 7, it will return true. If the handtotal is 6, they will onyl collect if the card value is
-    // 6 or 7 so itll return true. Else return false.
+    // 6 or 7 so it wil return true. Else return false.
     public boolean evaluateBankerDraw(ArrayList<Card> hand, Card playerCard) {
         if (handTotal(hand) >= 7 ) {
             return false;

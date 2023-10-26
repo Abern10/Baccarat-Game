@@ -3,7 +3,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+//import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -162,9 +162,6 @@ public class BaccaratGame extends Application {
 	private Scene drawCardsScene(Stage primaryStage) {
 		primaryStage.setTitle("Baccarat");
 
-		// TODO: ERROR IN COMMENTED OUT CODE (WHEN UNCOMMENTED DRAW CARDS BUTTON
-		// DOES NOT WORK PRETTY SURE ITS THE FIRST LINE)
-
 		theDealer = new BaccaratDealer();
 		theDealer.generateDeck();
 //
@@ -187,21 +184,10 @@ public class BaccaratGame extends Application {
 		bankerField.setTextFill(Color.BLACK);
 		bankerField.setText(bankerHand.get(0).suite + " " + bankerHand.get(0).value + "  |  " + bankerHand.get(1).suite + " " + bankerHand.get(1).value);
 		bankerTotal.setTextFill(Color.RED);
-		// TODO: FIX THIS SO THAT YOU CAN SEE THE TOTAL OF BOTH HANDS
-		//bankerTotal.setText(handTotal(bankerHand) + "");
+		bankerTotal.setText(Integer.toString(gameLogic.handTotal(bankerHand)));
 
 
-//		for (Card card : playerHand) {
-//			playerHandLabel.setText(playerHandLabel.getText() + " " + card.suite + " " + card.value);
-//		}
-//
-//		// Create Labels to display bankerHand
 
-//		TextField bankerField = new TextField();
-//		bankerField.setDisable(true);
-//		for (Card card : bankerHand) {
-//			bankerHandLabel.setText(bankerHandLabel.getText() + " " + card.suite + " " + card.value);
-//		}
 
 		// Create a VBox to stack the Labels
 		// Creates the label for the bankers hand
@@ -279,14 +265,11 @@ public class BaccaratGame extends Application {
 		setBetBanker = false;
 		setBetDraw = false;
 	}
-
 	private void setBetBanker() {
 		setBetPlayer = false;
 		setBetBanker = true;
 		setBetDraw = false;
 	}
-
-
 	private void setBetDraw() {
 		setBetPlayer = false;
 		setBetBanker = false;
