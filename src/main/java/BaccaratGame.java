@@ -1,3 +1,4 @@
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -10,6 +11,9 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.animation.KeyFrame;
+import javafx.util.Duration;
+
 
 public class BaccaratGame extends Application {
 
@@ -74,7 +78,7 @@ public class BaccaratGame extends Application {
 		VBox mainLayout = new VBox(titleBox, buttonBox);
 		mainLayout.setAlignment(Pos.CENTER);
 
-        return new Scene(mainLayout, 700, 700);
+		return new Scene(mainLayout, 700, 700);
 	}
 
 
@@ -138,6 +142,7 @@ public class BaccaratGame extends Application {
 		rectangularButtonBox.setAlignment(Pos.CENTER);
 		rectangularButtonBox.setSpacing(10);
 
+		// TODO: COMPLETE WINNINGS LABELS
 		// Create a label for "Winnings"
 		Label winningsLabel = new Label("Winnings: ");
 
@@ -153,7 +158,7 @@ public class BaccaratGame extends Application {
 		root.setAlignment(Pos.CENTER);
 		root.setSpacing(20);
 
-        return new Scene(root, 700, 700);
+		return new Scene(root, 700, 700);
 	}
 
 	// TODO: Complete this method for the next scene to display the cards
@@ -167,43 +172,49 @@ public class BaccaratGame extends Application {
 		playerHand = theDealer.dealHand();
 		bankerHand = theDealer.dealHand();
 
-		// Create Labels to display playerHand
-		Label playerHandLabel = new Label("Player Hand:");
-		Label playerField = new Label();
-		Label playerTotal = new Label();
-		playerField.setTextFill(Color.BLACK);
-		playerField.setText(playerHand.get(0).suite + " " + getString(playerHand.get(0).value) + "  |  " + playerHand.get(1).suite + " " + getString(playerHand.get(1).value));
-		playerTotal.setTextFill(Color.RED);
-		playerTotal.setText(Integer.toString(gameLogic.handTotal(playerHand)));
 
-		Label bankerHandLabel = new Label("Banker Hand:");
-		Label bankerField = new Label();
-		Label bankerTotal = new Label();
-		bankerField.setTextFill(Color.BLACK);
-		bankerField.setText(bankerHand.get(0).suite + " " + getString(bankerHand.get(0).value) + "  |  " + bankerHand.get(1).suite + " " + getString(bankerHand.get(1).value));
-		bankerTotal.setTextFill(Color.RED);
-		bankerTotal.setText(Integer.toString(gameLogic.handTotal(bankerHand)));
+		Label playerL = new Label();
+		Label bankerL = new Label();
+		VBox banker = new VBox(bankerL);
+		VBox player = new VBox(playerL);
+		HBox root = new HBox(player, banker);
 
-		if(gameLogic.evaluatePlayerDraw(playerHand)) {
-			playerHand.add(theDealer.drawOne());
-		}
+		Timeline timeline = new Timeline();
+		displayHandsTimeLine(playerHand, bankerHand, playerL, bankerL, timeline, player, banker, root);
+		timeline.play();
 
 
 
+
+//		if (gameLogic.evaluatePlayerDraw(playerHand)) {
+//			playerHand.add(theDealer.drawOne());
+//			Button drawOneMore = createRectangularButton("DRAW CARD");
+//		}
+		// First show the players card
+		// Then show the bankers card
+		// Then show player's second card
+		// Then show bankers's second card
+
+		// If there is a natural win, show message that whoever won and end the round
+
+		// Else, check if the player or banker can draw
+		// if they can draw, show a button that would say "Draw" card on it
+
+		// Add the third card(s) to whoever they are for then show the third car
 
 		// Create a VBox to stack the Labels
 		// Creates the label for the bankers hand
-		VBox banker = new VBox(bankerHandLabel, bankerField, bankerTotal);
-		banker.setAlignment(Pos.CENTER_RIGHT);
-
-		// Creates the label for the players hand
-		VBox player = new VBox(playerHandLabel,playerField, playerTotal);
-		player.setAlignment(Pos.CENTER_LEFT);
-
-		HBox root = new HBox(player, banker);
-		root.setSpacing(250);
-		root.setAlignment(Pos.CENTER);
-		return new Scene(root, 700, 700);
+//		VBox banker = new VBox(bankerL);
+//		banker.setAlignment(Pos.CENTER_RIGHT);
+//
+//		// Creates the label for the players hand
+//		VBox player = new VBox(playerL);
+//		player.setAlignment(Pos.CENTER_LEFT);
+//
+//		HBox root = new HBox(player, banker);
+//		root.setSpacing(250);
+//		root.setAlignment(Pos.CENTER);
+		return new Scene(timeline.play(), 700, 700);
 	}
 
 
@@ -259,7 +270,6 @@ public class BaccaratGame extends Application {
 	}
 
 
-
 	// The three methods below will set the appropriate boolean variable to true
 	// and the others to false
 	private void setBetPlayer() {
@@ -267,11 +277,13 @@ public class BaccaratGame extends Application {
 		setBetBanker = false;
 		setBetDraw = false;
 	}
+
 	private void setBetBanker() {
 		setBetPlayer = false;
 		setBetBanker = true;
 		setBetDraw = false;
 	}
+
 	private void setBetDraw() {
 		setBetPlayer = false;
 		setBetBanker = false;
@@ -295,4 +307,8 @@ public class BaccaratGame extends Application {
 
 
 
-}
+//	Label label = new Label();
+//		label.setText((s +'\n' + hand.get(0).suite + " " + getString(hand.get(0).value) + "  |  " + hand.get(1).suite + " " + getString(hand.get(1).value) + "\n\nTotal: " + Integer.toString(gameLogic.handTotal(hand))));
+//		return label;
+//
+//}
