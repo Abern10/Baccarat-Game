@@ -9,6 +9,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import java.util.ArrayList;
+import java.util.Timer;
+
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.animation.KeyFrame;
@@ -172,15 +174,85 @@ public class BaccaratGame extends Application {
 		playerHand = theDealer.dealHand();
 		bankerHand = theDealer.dealHand();
 
-
 		Label playerL = new Label();
 		Label bankerL = new Label();
+		final String[] playerString = {""};
+		final String[] bankerString = {""};
+
+		final int[] playerIndex = {0};
+		final int[] bankerIndex = {0};
+		final int[] cycleCount = {0};
+		//final int[] displayTotalPlayer = {0};
+		final int[] displayTotalBanker = {0};
+
+
+		//final int[] player = {0};
+
+		final int[] turn = {0};
+
+
+		Timeline timeline = new Timeline(
+
+				new KeyFrame(
+						Duration.seconds(1),
+						e-> {
+							if (turn[0] == 0) {
+								if (cycleCount[0] == 0) {
+									playerString[0] += "Player Hand: \n" + playerHand.get(playerIndex[0]).suite + ' ' + playerHand.get(playerIndex[0]).value;
+									playerL.setText(playerString[0]);
+									turn[0]++;
+									playerIndex[0]++;
+
+								}
+								else {
+									playerString[0] += "  " + playerHand.get(playerIndex[0]).suite + ' ' + playerHand.get(playerIndex[0]).value;
+									playerL.setText(playerString[0]);
+									turn[0] = 1;
+									playerIndex[0]++;
+								}
+							}
+							else   {
+								if (cycleCount[0] == 0) {
+									bankerString[0] += "Banker Hand:  \n" + bankerHand.get(bankerIndex[0]).suite + ' ' + bankerHand.get(bankerIndex[0]).value;
+									bankerL.setText(bankerString[0]);
+									turn[0] = 0;
+									cycleCount[0]++;
+									bankerIndex[0]++;
+								}
+								else {
+									bankerString[0] += "  " + bankerHand.get(bankerIndex[0]).suite + ' ' + bankerHand.get(bankerIndex[0]).value;
+									bankerL.setText(bankerString[0]);
+									turn[0] = 0;
+									bankerIndex[0]++;
+									//Don't increment cyclecount anymore;
+									//displayTotalPlayer[0]++;
+								}
+
+							}
+
+//							if (displayTotalPlayer[0] == 1){
+//								//show the playerTotal;
+//								playerString[0] += '\n' + "Total: " + gameLogic.handTotal(playerHand);
+//								playerL.setText(playerString[0]);
+//
+//							}
+						}
+				)
+
+
+		);
+
 		VBox banker = new VBox(bankerL);
 		VBox player = new VBox(playerL);
+		banker.setAlignment(Pos.CENTER_RIGHT);
+		player.setAlignment(Pos.CENTER_LEFT);
 		HBox root = new HBox(player, banker);
+		root.setSpacing(250);
+		root.setAlignment(Pos.BOTTOM_CENTER);
 
-		Timeline timeline = new Timeline();
-		displayHandsTimeLine(playerHand, bankerHand, playerL, bankerL, timeline, player, banker, root);
+		//displayHandsTimeLine(playerHand, bankerHand, playerL, bankerL, timeline, player, banker, root);
+		timeline.setCycleCount(playerHand.size() + bankerHand.size());
+
 		timeline.play();
 
 
@@ -214,7 +286,7 @@ public class BaccaratGame extends Application {
 //		HBox root = new HBox(player, banker);
 //		root.setSpacing(250);
 //		root.setAlignment(Pos.CENTER);
-		return new Scene(timeline.play(), 700, 700);
+		return new Scene(root, 700, 700);
 	}
 
 
