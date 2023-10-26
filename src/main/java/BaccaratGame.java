@@ -98,7 +98,6 @@ public class BaccaratGame extends Application {
 		Button drawButton = new Button("DRAW");
 		drawButton.setOnAction(e -> setBetDraw());
 
-
 		// Create a VBox to stack the buttons vertically
 		VBox buttonBox = new VBox(title, playerButton, bankerButton, drawButton);
 		buttonBox.setAlignment(Pos.CENTER);
@@ -177,8 +176,6 @@ public class BaccaratGame extends Application {
 		playerTotal.setTextFill(Color.RED);
 		playerTotal.setText(Integer.toString(gameLogic.handTotal(playerHand)));
 
-
-
 		Label bankerHandLabel = new Label("Banker Hand:");
 		Label bankerField = new Label();
 		Label bankerTotal = new Label();
@@ -186,6 +183,10 @@ public class BaccaratGame extends Application {
 		bankerField.setText(bankerHand.get(0).suite + " " + getString(bankerHand.get(0).value) + "  |  " + bankerHand.get(1).suite + " " + getString(bankerHand.get(1).value));
 		bankerTotal.setTextFill(Color.RED);
 		bankerTotal.setText(Integer.toString(gameLogic.handTotal(bankerHand)));
+
+		if(gameLogic.evaluatePlayerDraw(playerHand)) {
+			playerHand.add(theDealer.drawOne());
+		}
 
 
 
