@@ -184,63 +184,13 @@ public class BaccaratGame extends Application {
 		final int[] cycleCount = {0};
 		//final int[] displayTotalPlayer = {0};
 		final int[] displayTotalBanker = {0};
-
-
-		//final int[] player = {0};
-
 		final int[] turn = {0};
 
+		Timeline timeline = displayHandsTimeLine(playerL, bankerL, playerString, bankerString, playerIndex, bankerIndex, cycleCount, displayTotalPlayer, displayTotalBanker, turn, playerHand, bankerHand);
 
-		Timeline timeline = new Timeline(
-
-				new KeyFrame(
-						Duration.seconds(1),
-						e-> {
-							if (turn[0] == 0) {
-								if (cycleCount[0] == 0) {
-									playerString[0] += "Player Hand: \n" + playerHand.get(playerIndex[0]).suite + ' ' + playerHand.get(playerIndex[0]).value;
-									playerL.setText(playerString[0]);
-									turn[0]++;
-									playerIndex[0]++;
-
-								}
-								else {
-									playerString[0] += "  " + playerHand.get(playerIndex[0]).suite + ' ' + playerHand.get(playerIndex[0]).value;
-									playerL.setText(playerString[0]);
-									turn[0] = 1;
-									playerIndex[0]++;
-								}
-							}
-							else   {
-								if (cycleCount[0] == 0) {
-									bankerString[0] += "Banker Hand:  \n" + bankerHand.get(bankerIndex[0]).suite + ' ' + bankerHand.get(bankerIndex[0]).value;
-									bankerL.setText(bankerString[0]);
-									turn[0] = 0;
-									cycleCount[0]++;
-									bankerIndex[0]++;
-								}
-								else {
-									bankerString[0] += "  " + bankerHand.get(bankerIndex[0]).suite + ' ' + bankerHand.get(bankerIndex[0]).value;
-									bankerL.setText(bankerString[0]);
-									turn[0] = 0;
-									bankerIndex[0]++;
-									//Don't increment cyclecount anymore;
-									//displayTotalPlayer[0]++;
-								}
-
-							}
-
-//							if (displayTotalPlayer[0] == 1){
-//								//show the playerTotal;
-//								playerString[0] += '\n' + "Total: " + gameLogic.handTotal(playerHand);
-//								playerL.setText(playerString[0]);
-//
-//							}
-						}
-				)
-
-
-		);
+		Button drawOneMore = createRectangularButton("DRAW CARD");
+		drawOneMore.setDisable(true); // Initially the button is disabled
+		drawOneMore.setVisible(false); // Initially the button is not visable
 
 		VBox banker = new VBox(bankerL);
 		VBox player = new VBox(playerL);
@@ -255,17 +205,21 @@ public class BaccaratGame extends Application {
 
 		timeline.play();
 
-
-
-
-//		if (gameLogic.evaluatePlayerDraw(playerHand)) {
-//			playerHand.add(theDealer.drawOne());
-//			Button drawOneMore = createRectangularButton("DRAW CARD");
+//		if () {
+//			//End the game
 //		}
+
+		if (gameLogic.evaluatePlayerDraw(playerHand)) {
+			playerHand.add(theDealer.drawOne());
+			drawOneMore.setDisable(false); // Enable the button
+			drawOneMore.setVisible(true);  // Make the button visible
+		}
+
+
 		// First show the players card
 		// Then show the bankers card
 		// Then show player's second card
-		// Then show bankers's second card
+		// Then show banker's second card
 
 		// If there is a natural win, show message that whoever won and end the round
 
@@ -378,58 +332,49 @@ public class BaccaratGame extends Application {
 	}
 
 	// This method will return the label for the hand that is being passed
-	public void displayHandsTimeLine(ArrayList<Card> playerHand, ArrayList<Card> bankerHand, Label playerL, Label bankerL, Timeline timeline, VBox player, VBox banker, HBox root) {
-		timeline.setCycleCount(1);
+	public Timeline displayHandsTimeLine(Label playerL, Label bankerL, final String[] playerString, final String[] bankerString, final int[] playerIndex, final int[] bankerIndex, final int[] cycleCount, final int[] displayTotalPlayer, final int[] displayTotalBanker, final int[] turn, ArrayList<Card> playerHand, ArrayList<Card> bankerHand) {
+		Timeline timeline = new Timeline(
+				new KeyFrame(
+						Duration.seconds(1),
+						e -> {
+							if (turn[0] == 0) {
+								if (cycleCount[0] == 0) {
+									playerString[0] += "Player Hand: \n" + playerHand.get(playerIndex[0]).suite + ' ' + playerHand.get(playerIndex[0]).value;
+									playerL.setText(playerString[0]);
+									turn[0]++;
+									playerIndex[0]++;
+								} else {
+									playerString[0] += "  " + playerHand.get(playerIndex[0]).suite + ' ' + playerHand.get(playerIndex[0]).value;
+									playerL.setText(playerString[0]);
+									turn[0] = 1;
+									playerIndex[0]++;
+								}
+							} else {
+								if (cycleCount[0] == 0) {
+									bankerString[0] += "Banker Hand:  \n" + bankerHand.get(bankerIndex[0]).suite + ' ' + bankerHand.get(bankerIndex[0]).value;
+									bankerL.setText(bankerString[0]);
+									turn[0] = 0;
+									cycleCount[0]++;
+									bankerIndex[0]++;
+								} else {
+									bankerString[0] += "  " + bankerHand.get(bankerIndex[0]).suite + ' ' + bankerHand.get(bankerIndex[0]).value;
+									bankerL.setText(bankerString[0]);
+									turn[0] = 0;
+									bankerIndex[0]++;
+									//Don't increment cyclecount anymore;
+									displayTotalPlayer[0]++;
+								}
+							}
 
-
-		banker.setAlignment(Pos.CENTER_RIGHT);
-		player.setAlignment(Pos.CENTER_LEFT);
-
-		root.setSpacing(250);
-		root.setAlignment(Pos.CENTER);
-
-		HBox handsLayout = new HBox(); // Horizontal layout for player and banker hands
-		handsLayout.setSpacing(20); // Adjust the spacing as needed
-		handsLayout.setAlignment(Pos.CENTER);
-
-		// Add the labels to the handsLayout
-		handsLayout.getChildren().addAll(playerL, bankerL);
-
-		// Create a KeyFrame for each card to be displayed
-		for (int i = 0; i < playerHand.size(); i++) {
-			final int cardIndex = i;
-
-			KeyFrame keyFrame = new KeyFrame(Duration.seconds(i * 2), e -> {
-				// Update the player's and banker's labels with the card information
-				playerL.setText(playerL.getText() + "\n" + playerHand.get(cardIndex).suite + " " +
-						getString(playerHand.get(cardIndex).value));
-				bankerL.setText(bankerL.getText() + "\n" + bankerHand.get(cardIndex).suite + " " +
-						getString(bankerHand.get(cardIndex).value));
-			});
-
-			timeline.getKeyFrames().add(keyFrame);
-		}
-
-		// Return the handsLayout in a scene
-	}
-
-
-//	VBox banker = new VBox(bankerL);
-//		banker.setAlignment(Pos.CENTER_RIGHT);
-//
-//	// Creates the label for the players hand
-//	VBox player = new VBox(playerL);
-//		player.setAlignment(Pos.CENTER_LEFT);
-//
-//	HBox root = new HBox(player, banker);
-//		root.setSpacing(250);
-//		root.setAlignment(Pos.CENTER);
-//		return new Scene(root, 700, 700);
-
-}
-
-//	Label label = new Label();
-//		label.setText((s +'\n' + hand.get(0).suite + " " + getString(hand.get(0).value) + "  |  " + hand.get(1).suite + " " + getString(hand.get(1).value) + "\n\nTotal: " + Integer.toString(gameLogic.handTotal(hand))));
-//		return label;
-//
-//}
+							if (displayTotalPlayer[0] == 1){
+								//show the playerTotal;
+								playerString[0] += '\n' + "Total: " + gameLogic.handTotal(playerHand);
+								playerL.setText(playerString[0]);
+								bankerString[0] += '\n' + "Total: " + gameLogic.handTotal(bankerHand);
+								bankerL.setText(bankerString[0]);
+							}
+						}
+				)
+		);
+		return timeline;
+	}}

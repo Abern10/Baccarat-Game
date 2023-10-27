@@ -8,7 +8,15 @@ public class BaccaratGameLogic extends BaccaratDealer {
         String banker = "Banker";
         String draw = "Draw";
 
-        // FIX THIS
+        if (handTotal(playerHand) == handTotal(bankerHand)) {
+            return draw;
+        } else if (handTotal(playerHand) > handTotal(bankerHand)) {
+            return player;
+        } else {
+            return banker;
+        }
+    }
+
         // TODO ASK HOW A NATURAL WIN WORKS, WHEN SHOULD WE CALL WHO WON (ONCE OR TWICE) ASK ABOUT DRAWS, IS AN 8 AND A 9 COUNT AS A DRAW, DO WE NEED TO SHOW PREVIOUS BETS
         // IF A PLAYER HAS AN 8 OR 9 ALREADY DO THEY HAVE TO DRAW AND WHO GETS TO DECIDE.
 
@@ -26,39 +34,20 @@ public class BaccaratGameLogic extends BaccaratDealer {
 
         // Showing results:
         // Show each round result per game, it will clear if you press start from scratch
+
+    public boolean isNaturalWin(ArrayList<Card> playerHand, ArrayList<Card> bankerHand) {
         if((handTotal(playerHand) == 8 && handTotal(bankerHand) == 8) || (handTotal(playerHand) == 9 && handTotal(bankerHand) == 9)) {
-            return draw;
+            return true;
         }
         // If the banker has a higher total, it will return banker
-        else if((handTotal(playerHand) == 8 && handTotal(bankerHand) == 9)) {
-            return banker;
+        else if((handTotal(playerHand) != 9 && (handTotal(bankerHand) == 8 || (handTotal(bankerHand) == 9)))) {
+            return true;
         }
         // If the player has a higher hand, it will return player
-        else if((handTotal(playerHand) == 9 && handTotal(bankerHand) == 8)) {
-            return player;
+        else if((handTotal(playerHand) == 8 || handTotal(playerHand) == 9) && handTotal(bankerHand) != 9) {
+            return true;
         }
-
-//        if (handTotal(playerHand) == handTotal(bankerHand)) {
-//
-//        }
-
-
-        // If the player is able to draw a card, it will add the card to players hand
-//        if(evaluatePlayerDraw(playerHand)) {
-//            playerHand.add(drawOne());
-//            if (evaluateBankerDraw(bankerHand, playerHand.get(2))) {
-//                bankerHand.add(drawOne());
-//            }
-//
-//        }
-//        else {
-//            if (evaluateBankerDraw(bankerHand, new Card(null, -1))) {
-//                bankerHand.add(drawOne());
-//            }
-//        }
-        // TODO: Remove this return this is temporary
-        return draw;
-
+         return false;
     }
 
 
