@@ -1,3 +1,4 @@
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -7,6 +8,7 @@ import javafx.scene.control.Label;
 //import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -196,8 +198,9 @@ public class BaccaratGame extends Application {
 		VBox player = new VBox(playerL);
 		banker.setAlignment(Pos.CENTER_RIGHT);
 		player.setAlignment(Pos.CENTER_LEFT);
-		HBox root = new HBox(player, banker);
-		root.setSpacing(250);
+		drawOneMore.setAlignment(Pos.CENTER);
+		HBox root = new HBox(player, drawOneMore, banker);
+		root.setSpacing(100);
 		root.setAlignment(Pos.BOTTOM_CENTER);
 
 		//displayHandsTimeLine(playerHand, bankerHand, playerL, bankerL, timeline, player, banker, root);
@@ -205,15 +208,27 @@ public class BaccaratGame extends Application {
 
 		timeline.play();
 
-//		if () {
-//			//End the game
-//		}
+		Popup popup = new Popup();
+		Label naturalWinLabel = new Label("Natural Win!!");
+		naturalWinLabel.setTextFill(Color.RED);
+		popup.getContent().add(naturalWinLabel);
+		popup.hide();
+		PauseTransition pauseAfterCardsDealt = new PauseTransition( new Duration(2));
 
-		if (gameLogic.evaluatePlayerDraw(playerHand)) {
-			playerHand.add(theDealer.drawOne());
-			drawOneMore.setDisable(false); // Enable the button
-			drawOneMore.setVisible(true);  // Make the button visible
-		}
+		pauseAfterCardsDealt.setOnFinished(event-> {
+			if (gameLogic.isNaturalWin(playerHand, bankerHand)) {
+				popup.show(primaryStage);
+			}
+			else if (gameLogic.evaluatePlayerDraw(playerHand)) {
+				playerHand.add(theDealer.drawOne());
+				drawOneMore.setDisable(false); // Enable the button
+				drawOneMore.setVisible(true);  // Make the button visible
+			}
+		});
+		timeline.setOnFinished(e -> {
+			pauseAfterCardsDealt.play();
+		});
+		timeline.play();
 
 
 		// First show the players card
@@ -335,7 +350,7 @@ public class BaccaratGame extends Application {
 	public Timeline displayHandsTimeLine(Label playerL, Label bankerL, final String[] playerString, final String[] bankerString, final int[] playerIndex, final int[] bankerIndex, final int[] cycleCount, final int[] displayTotalPlayer, final int[] displayTotalBanker, final int[] turn, ArrayList<Card> playerHand, ArrayList<Card> bankerHand) {
 		Timeline timeline = new Timeline(
 				new KeyFrame(
-						Duration.seconds(1),
+						Duration.seconds(2.5),
 						e -> {
 							if (turn[0] == 0) {
 								if (cycleCount[0] == 0) {
