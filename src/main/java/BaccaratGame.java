@@ -182,7 +182,7 @@ public class BaccaratGame extends Application {
 		final int[] playerIndex = {0};
 		final int[] bankerIndex = {0};
 		final int[] cycleCount = {0};
-		//final int[] displayTotalPlayer = {0};
+		final int[] displayTotalPlayer = {0};
 		final int[] displayTotalBanker = {0};
 		final int[] turn = {0};
 
