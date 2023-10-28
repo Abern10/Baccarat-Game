@@ -28,7 +28,7 @@ public class BaccaratGame extends Application {
 	public BaccaratDealer theDealer;
 	public BaccaratGameLogic gameLogic = new BaccaratGameLogic();
 	public double currentBet;
-	public double totalWinnings;
+	public double totalWinnings = 0;
 
 	// Public member variables that we added
 	public boolean setBetPlayer;
@@ -39,7 +39,6 @@ public class BaccaratGame extends Application {
 	// This method will determine if the user won or lost their bet and return the amount won or
 	// lost based on the value in currentBet.
 	public double evaluateWinnings() {
-		totalWinnings = 0;
 		if(setBetPlayer && gameLogic.whoWon(playerHand,bankerHand).equals("Player")) {
 			return totalWinnings + currentBet;
 		} else if (setBetBanker && gameLogic.whoWon(playerHand, bankerHand).equals("Banker")) {
@@ -158,7 +157,7 @@ public class BaccaratGame extends Application {
 
 		// TODO: COMPLETE WINNINGS LABELS
 		// Create a label for "Winnings"
-		Label winningsLabel = new Label("Winnings: ");
+		Label winningsLabel = new Label("Winnings: $" + totalWinnings);
 
 		// Create a VBox to stack the elements
 		VBox root = new VBox(
@@ -208,6 +207,13 @@ public class BaccaratGame extends Application {
 		drawOneMore.setDisable(true); // Initially the button is disabled
 		drawOneMore.setVisible(false); // Initially the button is not visable
 
+		Button playAgain = createRectangularButton("PLAY AGAIN!");
+		playAgain.setVisible(false);
+		playAgain.setDisable(true);
+		playAgain.setOnAction( playAgainEvent -> {
+			primaryStage.setScene(setBetScene(primaryStage));
+		});
+
 		drawOneMore.setOnAction(e-> {
 			drawOneMore.setDisable(true);
 			PauseTransition pauseWhoWonMessage = new PauseTransition(Duration.seconds(2));
@@ -230,8 +236,15 @@ public class BaccaratGame extends Application {
 				whoWonLabel.setTextFill(Color.RED);
 				popup.getContent().add(whoWonLabel);
 				popup.show(primaryStage);
+
+				//Making the drawOneMore button disabled and not visable
 				drawOneMore.setVisible(false);
 				drawOneMore.setDisable(true);
+
+				// Play again button here
+				totalWinnings = evaluateWinnings();
+				playAgain.setVisible(true);
+				playAgain.setDisable(false);
 
 			});
 		pauseWhoWonMessage.play();
@@ -240,11 +253,12 @@ public class BaccaratGame extends Application {
 
 		VBox banker = new VBox(bankerL);
 		VBox player = new VBox(playerL);
+		VBox buttons = new VBox(playAgain, drawOneMore);
 		banker.setAlignment(Pos.CENTER_RIGHT);
 		player.setAlignment(Pos.CENTER_LEFT);
-		drawOneMore.setAlignment(Pos.CENTER);
-		HBox root = new HBox(player, drawOneMore, banker);
-		root.setSpacing(100);
+		buttons.setAlignment(Pos.CENTER);
+		HBox root = new HBox(player,buttons, banker);
+		root.setSpacing(50);
 		root.setAlignment(Pos.BOTTOM_CENTER);
 
 		//displayHandsTimeLine(playerHand, bankerHand, playerL, bankerL, timeline, player, banker, root);
@@ -270,7 +284,13 @@ public class BaccaratGame extends Application {
 					naturalWinLabel.setStyle("-fx-font-size: 64;");
 					popup.getContent().add(naturalWinLabel);
 					popup.show(primaryStage);
+
 				}
+
+				// Play again button here
+				totalWinnings = evaluateWinnings();
+				playAgain.setVisible(true);
+				playAgain.setDisable(false);
 
 				// END GAME RAHHHH
 				// Else, check if the player or banker can draw
