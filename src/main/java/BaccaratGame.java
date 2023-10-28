@@ -39,7 +39,16 @@ public class BaccaratGame extends Application {
 	// lost based on the value in currentBet.
 	public double evaluateWinnings() {
 		totalWinnings = 0;
-		return totalWinnings;
+		if(setBetPlayer && gameLogic.whoWon(playerHand,bankerHand).equals("Player")) {
+			return totalWinnings + currentBet;
+		} else if (setBetBanker && gameLogic.whoWon(playerHand, bankerHand).equals("Banker")) {
+			return totalWinnings + currentBet;
+		} else if (setBetDraw && gameLogic.whoWon(playerHand,bankerHand).equals("Draw")) {
+			return totalWinnings + currentBet;
+		}
+		else {
+			return totalWinnings;
+}
 	}
 
 	public static void main(String[] args) {
@@ -61,7 +70,7 @@ public class BaccaratGame extends Application {
 		// Create a label for the title
 		Label title = new Label("Baccarat");
 		title.setTextFill(Color.RED);
-		title.setStyle("-fx-font-size: 48px;"); // Increase the font size
+		title.setStyle("-fx-font-size: 64;"); // Increase the font size
 
 		// Create a button
 		Button playButton = new Button("Click to play!");
@@ -93,7 +102,7 @@ public class BaccaratGame extends Application {
 		// Create a label for the title
 		Label title = new Label("Baccarat");
 		title.setTextFill(Color.RED);
-		title.setStyle("-fx-font-size: 36px;"); // Increase the font size
+		title.setStyle("-fx-font-size: 64;"); // Increase the font size
 
 		// Create buttons for "PLAYER," "BANKER," and "DRAW" and all event handlers
 		Button playerButton = new Button("PLAYER");
@@ -208,40 +217,59 @@ public class BaccaratGame extends Application {
 
 		timeline.play();
 
-		Popup popup = new Popup();
-		Label naturalWinLabel = new Label("Natural Win!!");
-		naturalWinLabel.setTextFill(Color.RED);
-		popup.getContent().add(naturalWinLabel);
-		popup.hide();
-		PauseTransition pauseAfterCardsDealt = new PauseTransition( new Duration(2));
+		PauseTransition pauseAfterCardsDealt = new PauseTransition(Duration.seconds(2));
 
-		pauseAfterCardsDealt.setOnFinished(event-> {
+		pauseAfterCardsDealt.setOnFinished(e -> {
+			// If there is a natural win, show message that whoever won and end the round
 			if (gameLogic.isNaturalWin(playerHand, bankerHand)) {
-				popup.show(primaryStage);
-			}
-			else if (gameLogic.evaluatePlayerDraw(playerHand)) {
+				if (gameLogic.whoWon(playerHand, bankerHand).equals("Draw")) {
+					Label naturalDraw = new Label("It's a draw");
+					naturalDraw.setTextFill(Color.RED);
+					naturalDraw.setStyle("-fx-font-size: 64;");
+					popup.getContent().add(naturalDraw);
+					popup.show(primaryStage);
+				}
+				else {
+					Label naturalWinLabel = new Label("Natural Win!!\n" + (gameLogic.whoWon(playerHand, bankerHand) + " Won!!"));
+					naturalWinLabel.setTextFill(Color.RED);
+					naturalWinLabel.setStyle("-fx-font-size: 64;");
+					popup.getContent().add(naturalWinLabel);
+					popup.show(primaryStage);
+				}
+
+				// END GAME RAHHHH
+				// Else, check if the player or banker can draw
+				// if they can draw, show a button that would say "Draw" card on it
+			} else if (gameLogic.evaluatePlayerDraw(playerHand)) {
 				playerHand.add(theDealer.drawOne());
+				if(gameLogic.evaluateBankerDraw(bankerHand, playerHand.get(2))) {
+					bankerHand.add(theDealer.drawOne());
+					System.out.println(playerHand.size());
+					System.out.println(bankerHand.size());
+				}
 				drawOneMore.setDisable(false); // Enable the button
 				drawOneMore.setVisible(true);  // Make the button visible
+
+			} else if (gameLogic.evaluateBankerDraw(bankerHand, new Card("black", -1))) {
+				bankerHand.add(theDealer.drawOne());
+				drawOneMore.setDisable(false); // Enable the button
+				drawOneMore.setVisible(true);  // Make the button visible
+
 			}
 		});
+
 		timeline.setOnFinished(e -> {
 			pauseAfterCardsDealt.play();
 		});
+
 		timeline.play();
 
 
-		// First show the players card
-		// Then show the bankers card
-		// Then show player's second card
-		// Then show banker's second card
 
-		// If there is a natural win, show message that whoever won and end the round
 
-		// Else, check if the player or banker can draw
-		// if they can draw, show a button that would say "Draw" card on it
 
-		// Add the third card(s) to whoever they are for then show the third car
+
+		// Add the third card(s) to whoever they are for then show the third card
 
 		// Create a VBox to stack the Labels
 		// Creates the label for the bankers hand
