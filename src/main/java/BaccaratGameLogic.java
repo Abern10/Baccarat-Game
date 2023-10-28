@@ -36,7 +36,7 @@ public class BaccaratGameLogic extends BaccaratDealer {
         // Show each round result per game, it will clear if you press start from scratch
 
     public boolean isNaturalWin(ArrayList<Card> playerHand, ArrayList<Card> bankerHand) {
-        if((handTotal(playerHand) == 8 && handTotal(bankerHand) == 8) || (handTotal(playerHand) == 9 && handTotal(bankerHand) == 9)) {
+        if(((handTotal(playerHand) == 8 && handTotal(bankerHand) == 8)) || ((handTotal(playerHand) == 9 && handTotal(bankerHand) == 9))) {
             return true;
         }
         // If the banker has a higher total, it will return banker

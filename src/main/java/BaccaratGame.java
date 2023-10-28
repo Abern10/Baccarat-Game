@@ -197,6 +197,7 @@ public class BaccaratGame extends Application {
 		final int[] displayTotalBanker = {0};
 		final int[] turn = {0};
 
+
 		Timeline timeline = displayHandsTimeLine(playerL, bankerL, playerString, bankerString, playerIndex, bankerIndex, cycleCount, displayTotalPlayer, displayTotalBanker, turn, playerHand, bankerHand);
 
 		Popup popup = new Popup();
@@ -211,6 +212,7 @@ public class BaccaratGame extends Application {
 		playAgain.setVisible(false);
 		playAgain.setDisable(true);
 		playAgain.setOnAction( playAgainEvent -> {
+			popup.hide();
 			primaryStage.setScene(setBetScene(primaryStage));
 		});
 
@@ -243,6 +245,7 @@ public class BaccaratGame extends Application {
 
 				// Play again button here
 				totalWinnings = evaluateWinnings();
+				currentBet = 0;
 				playAgain.setVisible(true);
 				playAgain.setDisable(false);
 
@@ -276,6 +279,7 @@ public class BaccaratGame extends Application {
 					naturalDraw.setTextFill(Color.RED);
 					naturalDraw.setStyle("-fx-font-size: 64;");
 					popup.getContent().add(naturalDraw);
+					popup.show(primaryStage);
 
 				}
 				else {
@@ -289,6 +293,7 @@ public class BaccaratGame extends Application {
 
 				// Play again button here
 				totalWinnings = evaluateWinnings();
+				currentBet = 0;
 				playAgain.setVisible(true);
 				playAgain.setDisable(false);
 
@@ -310,6 +315,17 @@ public class BaccaratGame extends Application {
 				drawOneMore.setDisable(false); // Enable the button
 				drawOneMore.setVisible(true);  // Make the button visible
 
+			}
+			else {
+				Label firstWin = new Label(gameLogic.whoWon(playerHand,bankerHand) + " Won!!");
+				firstWin.setStyle("-fx-font-size: 64;");
+				firstWin.setTextFill(Color.RED);
+				popup.getContent().add(firstWin);
+				popup.show(primaryStage);
+				totalWinnings = evaluateWinnings();
+				currentBet = 0;
+				playAgain.setVisible(true);
+				playAgain.setDisable(false);
 			}
 			// Need to add case here if both totals are 7 and neither can draw a card
 			// outuput draw and then just the playagain button
