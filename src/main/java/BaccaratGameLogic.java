@@ -62,7 +62,7 @@ public class BaccaratGameLogic extends BaccaratDealer {
         for (Card c: hand) {
             int value = c.value;
 
-            if (value < 10) {
+            if (value < 10 && value > 0) {
                 handTotal += value;
             }
 

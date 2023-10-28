@@ -19,6 +19,7 @@ import javafx.animation.KeyFrame;
 import javafx.util.Duration;
 
 
+
 public class BaccaratGame extends Application {
 
 	// Public member variables
@@ -199,9 +200,43 @@ public class BaccaratGame extends Application {
 
 		Timeline timeline = displayHandsTimeLine(playerL, bankerL, playerString, bankerString, playerIndex, bankerIndex, cycleCount, displayTotalPlayer, displayTotalBanker, turn, playerHand, bankerHand);
 
+		Popup popup = new Popup();
+		popup.hide();
+
+
 		Button drawOneMore = createRectangularButton("DRAW CARD");
 		drawOneMore.setDisable(true); // Initially the button is disabled
 		drawOneMore.setVisible(false); // Initially the button is not visable
+
+		drawOneMore.setOnAction(e-> {
+			drawOneMore.setDisable(true);
+			PauseTransition pauseWhoWonMessage = new PauseTransition(Duration.seconds(2));
+
+			pauseWhoWonMessage.setOnFinished(eventWhoWon -> {
+				if (playerHand.size() == 3) {
+					playerString[0] = playerString[0].substring(0, playerString[0].length() - 2);
+					playerString[0] += gameLogic.handTotal(playerHand) + "\nThird Card: " + playerHand.get(2).suite + ' ' + getString(playerHand.get(2).value);
+					playerL.setText(playerString[0]);
+				}
+				if (bankerHand.size() == 3) {
+					bankerString[0] = bankerString[0].substring(0, bankerString[0].length() - 2);
+					bankerString[0] += gameLogic.handTotal(bankerHand) + "\nThird Card: " + bankerHand.get(2).suite + ' ' + getString(bankerHand.get(2).value);
+					bankerL.setText(bankerString[0]);
+
+				}
+				popup.getContent().clear();
+				Label whoWonLabel = new Label((gameLogic.whoWon(playerHand, bankerHand) + " Won!!"));
+				whoWonLabel.setStyle("-fx-font-size: 64;");
+				whoWonLabel.setTextFill(Color.RED);
+				popup.getContent().add(whoWonLabel);
+				popup.show(primaryStage);
+				drawOneMore.setVisible(false);
+				drawOneMore.setDisable(true);
+
+			});
+		pauseWhoWonMessage.play();
+		}
+		);
 
 		VBox banker = new VBox(bankerL);
 		VBox player = new VBox(playerL);
@@ -382,25 +417,25 @@ public class BaccaratGame extends Application {
 						e -> {
 							if (turn[0] == 0) {
 								if (cycleCount[0] == 0) {
-									playerString[0] += "Player Hand: \n" + playerHand.get(playerIndex[0]).suite + ' ' + playerHand.get(playerIndex[0]).value;
+									playerString[0] += "Player Hand: \n" + playerHand.get(playerIndex[0]).suite + ' ' + getString(playerHand.get(playerIndex[0]).value);
 									playerL.setText(playerString[0]);
 									turn[0]++;
 									playerIndex[0]++;
 								} else {
-									playerString[0] += "  " + playerHand.get(playerIndex[0]).suite + ' ' + playerHand.get(playerIndex[0]).value;
+									playerString[0] += "  " + playerHand.get(playerIndex[0]).suite + ' ' + getString(playerHand.get(playerIndex[0]).value);
 									playerL.setText(playerString[0]);
 									turn[0] = 1;
 									playerIndex[0]++;
 								}
 							} else {
 								if (cycleCount[0] == 0) {
-									bankerString[0] += "Banker Hand:  \n" + bankerHand.get(bankerIndex[0]).suite + ' ' + bankerHand.get(bankerIndex[0]).value;
+									bankerString[0] += "Banker Hand:  \n" + bankerHand.get(bankerIndex[0]).suite + ' ' + getString(bankerHand.get(bankerIndex[0]).value);
 									bankerL.setText(bankerString[0]);
 									turn[0] = 0;
 									cycleCount[0]++;
 									bankerIndex[0]++;
 								} else {
-									bankerString[0] += "  " + bankerHand.get(bankerIndex[0]).suite + ' ' + bankerHand.get(bankerIndex[0]).value;
+									bankerString[0] += "  " + bankerHand.get(bankerIndex[0]).suite + ' ' + getString(bankerHand.get(bankerIndex[0]).value);
 									bankerL.setText(bankerString[0]);
 									turn[0] = 0;
 									bankerIndex[0]++;
