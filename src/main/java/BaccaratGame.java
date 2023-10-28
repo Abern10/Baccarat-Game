@@ -262,7 +262,7 @@ public class BaccaratGame extends Application {
 					naturalDraw.setTextFill(Color.RED);
 					naturalDraw.setStyle("-fx-font-size: 64;");
 					popup.getContent().add(naturalDraw);
-					popup.show(primaryStage);
+
 				}
 				else {
 					Label naturalWinLabel = new Label("Natural Win!!\n" + (gameLogic.whoWon(playerHand, bankerHand) + " Won!!"));
@@ -291,6 +291,11 @@ public class BaccaratGame extends Application {
 				drawOneMore.setVisible(true);  // Make the button visible
 
 			}
+			// Need to add case here if both totals are 7 and neither can draw a card
+			// outuput draw and then just the playagain button
+
+
+
 		});
 
 		timeline.setOnFinished(e -> {
@@ -299,25 +304,6 @@ public class BaccaratGame extends Application {
 
 		timeline.play();
 
-
-
-
-
-
-		// Add the third card(s) to whoever they are for then show the third card
-
-		// Create a VBox to stack the Labels
-		// Creates the label for the bankers hand
-//		VBox banker = new VBox(bankerL);
-//		banker.setAlignment(Pos.CENTER_RIGHT);
-//
-//		// Creates the label for the players hand
-//		VBox player = new VBox(playerL);
-//		player.setAlignment(Pos.CENTER_LEFT);
-//
-//		HBox root = new HBox(player, banker);
-//		root.setSpacing(250);
-//		root.setAlignment(Pos.CENTER);
 		return new Scene(root, 700, 700);
 	}
 
