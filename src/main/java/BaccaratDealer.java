@@ -18,7 +18,7 @@ public class BaccaratDealer {
         deck.clear();
 
         // Add the cards into the deck
-        for (int i = 1; i <= 12; i++) {
+        for (int i = 1; i <= 13; i++) {
             deck.add(new Card("heart", i));
             deck.add(new Card("diamond", i));
             deck.add(new Card("spade", i));

@@ -35,8 +35,6 @@ public class BaccaratGame extends Application {
 	public boolean setBetPlayer;
 	public boolean setBetBanker;
 	public boolean setBetDraw;
-	String previousRoundsString = "Previous Rounds:\n";
-	public Menu optionsMenu;
 	public int freshStartClicked = 0;
 	public Popup popup;
 	String previousRoundsString = "Previous Rounds:\n";
@@ -162,7 +160,7 @@ public class BaccaratGame extends Application {
 		rectangularButtonBox.setAlignment(Pos.CENTER);
 		rectangularButtonBox.setSpacing(10);
 
-		// TODO: COMPLETE WINNINGS LABELS
+
 		// Create a label for "Winnings"
 		Label winningsLabel = new Label("Winnings: $" + totalWinnings);
 		HBox rounds = new HBox(createScrollableTextArea(previousRoundsString));
@@ -469,7 +467,7 @@ public class BaccaratGame extends Application {
 		setBetDraw = false;
 	}
 
-	private void setBetBanker() {
+	public void setBetBanker() {
 		setBetPlayer = false;
 		setBetBanker = true;
 		setBetDraw = false;
