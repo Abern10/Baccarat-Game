@@ -1,5 +1,4 @@
 import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
 import java.util.*;
 
@@ -13,17 +12,35 @@ import java.util.ArrayList;
 
 class MyTest {
 
+	// Card constructor class test
+	// This test will create a card and check to see if the variables are set correctly
 	@Test
-	void test() {
-		fail("Not yet implemented");
+	public void testCardConstructor() {
+		Card card = new Card("Hearts", 10);
+
+		// Check if the suite and value were set correctly
+		assertEquals("Hearts", card.suite);
+		assertEquals(10, card.value);
 	}
 
-//	@Test
+	// Tests for Baccarat Dealer Class
 
-//	void deckSizeTest() {
-//		BaccaratDealer dealer = new Baccarat
-//		generateDeck();
-//
-//	}
+	// This t
+	@Test
+	// This test will make sure that 52 cards are created
+	void generateDeckTest() {
+		BaccaratDealer d = new BaccaratDealer();
+		d.generateDeck();
+		assertEquals(52, d.deckSize());
+	}
+
+	@Test
+	// This test makes sure that even if you call generateDeck() multiple times, it will only have 52 cards
+	void generateDeckTestMultiple() {
+		BaccaratDealer d = new BaccaratDealer();
+		d.generateDeck();
+		d.generateDeck();
+		assertEquals(52, d.deckSize());
+	}
 
 }

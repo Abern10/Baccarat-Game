@@ -28,10 +28,10 @@ public class BaccaratGame extends Application {
 	public BaccaratDealer theDealer;
 	public BaccaratGameLogic gameLogic = new BaccaratGameLogic();
 	public double currentBet;
-	public double totalWinnings = 0;
+	public double totalWinnings = 0.0;
 
 
-	// Public member variables that we added
+	// Additional public member variables that we added
 	public boolean setBetPlayer;
 	public boolean setBetBanker;
 	public boolean setBetDraw;
@@ -39,6 +39,7 @@ public class BaccaratGame extends Application {
 	public Menu optionsMenu;
 	public int freshStartClicked = 0;
 	public Popup popup;
+	String previousRoundsString = "Previous Rounds:\n";
 
 	// This method will determine if the user won or lost their bet and return the amount won or
 	// lost based on the value in currentBet.
@@ -52,7 +53,7 @@ public class BaccaratGame extends Application {
 		}
 		else {
 			return totalWinnings;
-}
+		}
 	}
 
 	public static void main(String[] args) {
@@ -183,7 +184,6 @@ public class BaccaratGame extends Application {
 		return new Scene(root, 700, 700);
 	}
 
-	// TODO: Complete this method for the next scene to display the cards
 	// This method sets the scene to display the cards that were drawn
 	private Scene drawCardsScene(Stage primaryStage) {
 		primaryStage.setTitle("Baccarat");
@@ -297,6 +297,7 @@ public class BaccaratGame extends Application {
 		pauseWhoWonMessage.play();
 		}
 		);
+
 
 		VBox banker = new VBox(bankerL);
 		VBox player = new VBox(playerL);
@@ -462,7 +463,7 @@ public class BaccaratGame extends Application {
 
 	// The three methods below will set the appropriate boolean variable to true
 	// and the others to false
-	private void setBetPlayer() {
+	public void setBetPlayer() {
 		setBetPlayer = true;
 		setBetBanker = false;
 		setBetDraw = false;
@@ -474,7 +475,7 @@ public class BaccaratGame extends Application {
 		setBetDraw = false;
 	}
 
-	private void setBetDraw() {
+	public void setBetDraw() {
 		setBetPlayer = false;
 		setBetBanker = false;
 		setBetDraw = true;
@@ -589,7 +590,4 @@ public class BaccaratGame extends Application {
 
 		return scrollPane;
 	}
-
-
 }
-
