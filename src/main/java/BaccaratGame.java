@@ -1,22 +1,22 @@
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-//import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import java.util.ArrayList;
-import java.util.Timer;
-
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.animation.KeyFrame;
 import javafx.util.Duration;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 
 
 
@@ -30,12 +30,16 @@ public class BaccaratGame extends Application {
 	public double currentBet;
 	public double totalWinnings = 0;
 
+
 	// Public member variables that we added
 	public boolean setBetPlayer;
 	public boolean setBetBanker;
 	public boolean setBetDraw;
+	String previousRoundsString = "Previous Rounds:\n";
+	public Menu optionsMenu;
+	public int freshStartClicked = 0;
+	public Popup popup;
 
-	// TODO: FINISH THIS METHOD
 	// This method will determine if the user won or lost their bet and return the amount won or
 	// lost based on the value in currentBet.
 	public double evaluateWinnings() {
@@ -98,6 +102,8 @@ public class BaccaratGame extends Application {
 	// This method sets the scene for a player to place their bets
 	private Scene setBetScene(Stage primaryStage) {
 		primaryStage.setTitle("Baccarat");
+
+		freshStartClicked = 0;
 
 		// Create a label for the title
 		Label title = new Label("Baccarat");
@@ -181,12 +187,13 @@ public class BaccaratGame extends Application {
 
 		theDealer = new BaccaratDealer();
 		theDealer.generateDeck();
-//
+
 		playerHand = theDealer.dealHand();
 		bankerHand = theDealer.dealHand();
 
 		Label playerL = new Label();
 		Label bankerL = new Label();
+		Label totalWinningsL = new Label("Winnings: $" + totalWinnings);
 		final String[] playerString = {""};
 		final String[] bankerString = {""};
 
@@ -207,6 +214,7 @@ public class BaccaratGame extends Application {
 		Button drawOneMore = createRectangularButton("DRAW CARD");
 		drawOneMore.setDisable(true); // Initially the button is disabled
 		drawOneMore.setVisible(false); // Initially the button is not visable
+
 
 		Button playAgain = createRectangularButton("PLAY AGAIN!");
 		playAgain.setVisible(false);
@@ -260,9 +268,26 @@ public class BaccaratGame extends Application {
 		banker.setAlignment(Pos.CENTER_RIGHT);
 		player.setAlignment(Pos.CENTER_LEFT);
 		buttons.setAlignment(Pos.CENTER);
-		HBox root = new HBox(player,buttons, banker);
-		root.setSpacing(50);
-		root.setAlignment(Pos.BOTTOM_CENTER);
+
+
+		HBox all3 = new HBox(player,buttons, banker);
+		all3.setSpacing(50);
+
+
+		HBox finished = new HBox(createScrollableTextArea(previousRoundsString),totalWinningsL);
+		finished.setSpacing(50);
+
+
+		VBox menuH = new VBox(createMenuBar(primaryStage));
+		VBox root = new VBox(menuH, all3, finished );
+		root.setSpacing(250);
+		finished.setAlignment(Pos.BOTTOM_CENTER);
+		menuH.setAlignment(Pos.TOP_CENTER);
+		all3.setAlignment(Pos.CENTER);
+
+
+
+
 
 		//displayHandsTimeLine(playerHand, bankerHand, playerL, bankerL, timeline, player, banker, root);
 		timeline.setCycleCount(playerHand.size() + bankerHand.size());
@@ -429,6 +454,42 @@ public class BaccaratGame extends Application {
 		} else {
 			return Integer.toString(value);
 		}
+	}
+
+	private MenuBar createMenuBar(Stage primaryStage) {
+		MenuBar optionsMenuBar = new MenuBar();
+		Menu optionsMenu = new Menu("OPTIONS");
+		MenuItem freshStartMenuItem = new MenuItem("FRESH START");
+		MenuItem exitMenuItem = new MenuItem("EXIT");
+
+		optionsMenu.getItems().add(exitMenuItem);
+		optionsMenu.getItems().add(freshStartMenuItem);
+		optionsMenuBar.getMenus().add(optionsMenu);
+
+
+		freshStartMenuItem.setOnAction(e -> {
+			// Implement the action for "FRESH START"
+			popup.hide();
+			totalWinnings = 0;
+			currentBet = 0;
+			previousRoundsString = "Previous Rounds:\n";
+			setBetPlayer = false;
+			setBetBanker = false;
+			setBetDraw = false;
+			freshStartClicked = 1;
+
+			primaryStage.setScene(setBetScene(primaryStage));
+		});
+
+		exitMenuItem.setOnAction(e -> {
+			// Implement the action for "EXIT"
+			Platform.exit(); // Close the entire program
+		});
+
+		optionsMenu.setOnAction(e -> {
+
+		});
+		return optionsMenuBar;
 	}
 
 	// This method will return the label for the hand that is being passed
