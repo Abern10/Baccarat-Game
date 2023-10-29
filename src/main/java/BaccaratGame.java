@@ -164,6 +164,8 @@ public class BaccaratGame extends Application {
 		// TODO: COMPLETE WINNINGS LABELS
 		// Create a label for "Winnings"
 		Label winningsLabel = new Label("Winnings: $" + totalWinnings);
+		HBox rounds = new HBox(createScrollableTextArea(previousRoundsString));
+		rounds.setAlignment(Pos.BOTTOM_LEFT);
 
 		// Create a VBox to stack the elements
 		VBox root = new VBox(
@@ -172,7 +174,8 @@ public class BaccaratGame extends Application {
 				circleButtonBox,
 				totalBetLabel,
 				rectangularButtonBox,
-				winningsLabel
+				winningsLabel,
+				rounds
 		);
 		root.setAlignment(Pos.CENTER);
 		root.setSpacing(20);
@@ -207,7 +210,7 @@ public class BaccaratGame extends Application {
 
 		Timeline timeline = displayHandsTimeLine(playerL, bankerL, playerString, bankerString, playerIndex, bankerIndex, cycleCount, displayTotalPlayer, displayTotalBanker, turn, playerHand, bankerHand);
 
-		Popup popup = new Popup();
+		popup = new Popup();
 		popup.hide();
 
 
@@ -220,6 +223,39 @@ public class BaccaratGame extends Application {
 		playAgain.setVisible(false);
 		playAgain.setDisable(true);
 		playAgain.setOnAction( playAgainEvent -> {
+			previousRoundsString += "Player Total: " + gameLogic.handTotal(playerHand) + "  Banker Total: " + gameLogic.handTotal(bankerHand) + '\n';
+			if (gameLogic.whoWon(playerHand, bankerHand).equals("Draw")) {
+				previousRoundsString += "There was a Draw\n";
+			}
+			else {
+				previousRoundsString += gameLogic.whoWon(playerHand, bankerHand) + " Won\n";
+			}
+
+			if (setBetDraw && gameLogic.whoWon(playerHand, bankerHand).equals("Draw")) {
+				previousRoundsString+= "Congrats you bet Draw, you win!\n";
+			}
+			else if (setBetPlayer && gameLogic.whoWon(playerHand, bankerHand).equals("Player")){
+				previousRoundsString+= "Congrats you bet Player, you win!\n";
+			}
+			else if (setBetBanker && gameLogic.whoWon(playerHand, bankerHand).equals("Banker")){
+				previousRoundsString+= "Congrats you bet Banker, you win!\n";
+			}
+			else {
+				previousRoundsString+= "Sorry, you bet ";
+				if (setBetDraw) {
+					previousRoundsString += "Draw. You lost your bet!\n";
+				}
+				else if (setBetPlayer) {
+					previousRoundsString +="Player. You lost your bet!\n";
+				}
+				else if (setBetBanker) {
+					previousRoundsString +="Banker. You lost your bet!\n";
+				}
+			}
+			previousRoundsString += '\n';
+			setBetDraw = false;
+			setBetBanker = false;
+			setBetPlayer = false;
 			popup.hide();
 			primaryStage.setScene(setBetScene(primaryStage));
 		});
@@ -265,6 +301,8 @@ public class BaccaratGame extends Application {
 		VBox banker = new VBox(bankerL);
 		VBox player = new VBox(playerL);
 		VBox buttons = new VBox(playAgain, drawOneMore);
+
+
 		banker.setAlignment(Pos.CENTER_RIGHT);
 		player.setAlignment(Pos.CENTER_LEFT);
 		buttons.setAlignment(Pos.CENTER);
@@ -300,20 +338,23 @@ public class BaccaratGame extends Application {
 			// If there is a natural win, show message that whoever won and end the round
 			if (gameLogic.isNaturalWin(playerHand, bankerHand)) {
 				if (gameLogic.whoWon(playerHand, bankerHand).equals("Draw")) {
-					Label naturalDraw = new Label("It's a draw");
+					Label naturalDraw = new Label("It's a draw!!");
 					naturalDraw.setTextFill(Color.RED);
 					naturalDraw.setStyle("-fx-font-size: 64;");
 					popup.getContent().add(naturalDraw);
-					popup.show(primaryStage);
+					if (freshStartClicked == 0) {
+						popup.show(primaryStage);
+					}
 
 				}
 				else {
 					Label naturalWinLabel = new Label("Natural Win!!\n" + (gameLogic.whoWon(playerHand, bankerHand) + " Won!!"));
 					naturalWinLabel.setTextFill(Color.RED);
-					naturalWinLabel.setStyle("-fx-font-size: 64;");
+					naturalWinLabel.setStyle("-fx-font-size: 40;");
 					popup.getContent().add(naturalWinLabel);
-					popup.show(primaryStage);
-
+					if (freshStartClicked == 0) {
+						popup.show(primaryStage);
+					}
 				}
 
 				// Play again button here
@@ -329,8 +370,6 @@ public class BaccaratGame extends Application {
 				playerHand.add(theDealer.drawOne());
 				if(gameLogic.evaluateBankerDraw(bankerHand, playerHand.get(2))) {
 					bankerHand.add(theDealer.drawOne());
-					System.out.println(playerHand.size());
-					System.out.println(bankerHand.size());
 				}
 				drawOneMore.setDisable(false); // Enable the button
 				drawOneMore.setVisible(true);  // Make the button visible
@@ -538,4 +577,19 @@ public class BaccaratGame extends Application {
 				)
 		);
 		return timeline;
-	}}
+	}
+	private ScrollPane createScrollableTextArea(String text) {
+		TextArea previousRounds = new TextArea(text);
+		previousRounds.setPrefSize(300, 200);
+		previousRounds.setEditable(false);
+
+		ScrollPane scrollPane = new ScrollPane(previousRounds);
+		scrollPane.setFitToWidth(true);
+		scrollPane.setFitToHeight(true);
+
+		return scrollPane;
+	}
+
+
+}
+
